@@ -5,11 +5,13 @@ namespace Mconnect{
         Gtk.Window window;
         Gtk.Box box;
         Gtk.ComboBoxText device_combo;
+        Gtk.Box device_box;
         Gtk.Grid device_grid;
         Gtk.Label label_name;
         Gtk.Label label_connected;
         Gtk.Label label_battery;
         bool is_device_selected = false;
+        Gtk.Box device_buttons;
         GLib.ObjectPath selected_device = null;
 
         public static int main (string[] args) {
@@ -37,7 +39,7 @@ namespace Mconnect{
         }
 
         private void update_gui(){
-            device_grid.visible = is_device_selected;
+            device_box.visible = is_device_selected;
             if(is_device_selected){
                 var device = get_device(selected_device);
                 var battery = get_battery_manager(selected_device);
@@ -58,6 +60,7 @@ namespace Mconnect{
             window.destroy.connect (Gtk.main_quit);
             box = new Gtk.Box(Orientation.VERTICAL,16);
             device_combo = new Gtk.ComboBoxText();
+            device_box = new Gtk.Box(Orientation.VERTICAL,16);
             device_grid = new Gtk.Grid();
             label_name = new Gtk.Label("");
             label_connected = new Gtk.Label("");
@@ -71,14 +74,21 @@ namespace Mconnect{
             device_combo.changed.connect (() => {
                 on_device_selected();
             });
+            device_buttons = new Gtk.Box(Orientation.HORIZONTAL,16);
+            var refresh_button = new Gtk.Button();
+            refresh_button.label = "Refresh";
+            device_buttons.add(refresh_button);
+            refresh_button.clicked.connect(()=>{update_gui();});
             device_grid.attach(new Gtk.Label("Name:"),0,0,1,1);
             device_grid.attach(label_name,1,0,1,1);
             device_grid.attach(new Gtk.Label("Connected:"),0,1,1,1);
             device_grid.attach(label_connected,1,1,1,1);
             device_grid.attach(new Gtk.Label("Battery Level:"),0,2,1,1);
             device_grid.attach(label_battery,1,2,1,1);
+            device_box.add(device_grid);
+            device_box.add(device_buttons);
+            box.add(device_box);
             window.add(box);
-            box.add(device_grid);
             window.show_all ();
             update_gui();
         }
