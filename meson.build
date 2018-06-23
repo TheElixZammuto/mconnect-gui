@@ -24,7 +24,8 @@ mconnectgui_src = [
   'src/mconnectgui/main.vala',
   'src/mconnectgui/device-manager-iface.vala',
   'src/mconnectgui/device-iface.vala',
-  'src/mconnectgui/battery-iface.vala'
+  'src/mconnectgui/battery-iface.vala',
+  'src/mconnectgui/share-iface.vala'
 ]
 executable('mconnectgui', mconnectgui_src,
            dependencies : [gtk_dep,glib_dep, gobject_dep,
